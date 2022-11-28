@@ -4,7 +4,10 @@
     "lib": [
       "ESNext"
     ],
-    "outDir": "dist"
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "include": [
     "src"

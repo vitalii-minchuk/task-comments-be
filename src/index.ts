@@ -1,14 +1,18 @@
-import express from 'express';
-import morgan from 'morgan';
+import 'reflect-metadata';
+import createServer from './utils/create-server';
 
-const app = express();
+async function main() {
+  const { app, server } = await createServer();
 
-app.use(morgan('dev'));
+  app.get('/healthcheck', async () => 'OK');
 
-app.get('/', (req, res) => {
-  res.json({ hello: 'world' });
-});
+  await server.start();
 
-app.listen(4004, '0.0.0.0', () => {
-  console.log('server is running');
-});
+  await app.listen({
+    port: 4004,
+  });
+
+  console.log(`Server ready at http://localhost:4000${server.graphqlPath}`);
+}
+
+main();
