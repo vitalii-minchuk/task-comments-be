@@ -7,15 +7,15 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgres://postgres@localhost:5432/comments"
 }
 
 model User {
   id          String   @id @default(cuid())
   username    String
   email       String   @unique
-  homePageUrl String
-  text        String
+  password    String
+  homePageUrl String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
