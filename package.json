@@ -1,12 +1,16 @@
 {
-  "name": "task-comments-be",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && swc ./src -d dist",
     "start": "node dist/index.js",
-    "start:docker": "npm run build && npm run start"
+    "start:docker": "npm run build && npm run start",
+    "rebuild:be": "docker compose build backend && docker compose rm --stop backend && docker compose up -d backend",
+    "db:console": "docker compose exec postgres psql -h localhost -U postgres -d comments_dev",
+    "db:migrate": "npx prisma migrate reset",
+    "docker:db:migrate": "docker compose run backend npm run db:migrate"
   },
   "keywords": [],
   "author": "",

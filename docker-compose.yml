@@ -1,7 +1,7 @@
 version: "2"
 
 services:
-  beckend:
+  backend:
     build: .
     ports:
       - 4004:4004
@@ -9,6 +9,19 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start:docker
     environment:
+      DATABASE_URL: postgres://postgres@postgres/comments_dev
       PORT: 4004
+    command: npm run start:docker
+    restart: always
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: comments_dev
+      POSTGRES_HOST_AUTH_METHOD: trust
+
