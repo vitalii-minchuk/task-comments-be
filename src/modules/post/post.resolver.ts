@@ -1,11 +1,23 @@
 import { ApolloError } from 'apollo-server-core';
-import { Arg, Ctx, Mutation } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query } from 'type-graphql';
 import logger from '../../helpers/logger';
 import { Context } from '../../utils/create-server';
+import { User } from '../user/user.dto';
 import { CreatePostInput, Post } from './post.dto';
-import { createPost } from './post.service';
+import { createPost, findAllPosts } from './post.service';
 
 class RostResolver {
+  @Query(() => [Post])
+  async getAllPosts() {
+    try {
+      const posts = await findAllPosts();
+      logger.info(posts);
+      return posts;
+    } catch (error: any) {
+      throw Error(error);
+    }
+  }
+
   @Mutation(() => Post)
   async createNewPost(
     @Arg('input') input: CreatePostInput,

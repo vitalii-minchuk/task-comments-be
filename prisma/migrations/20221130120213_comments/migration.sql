@@ -26,6 +26,9 @@ CREATE TABLE "comments" (
 -- CreateIndex
 CREATE UNIQUE INDEX "posts_link_key" ON "posts"("link");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "comments_id_key" ON "comments"("id");
+
 -- AddForeignKey
 ALTER TABLE "posts" ADD CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

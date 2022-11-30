@@ -6,15 +6,15 @@ import fastify, {
   FastifyReply,
   FastifyRequest,
 } from 'fastify';
-import { buildSchema } from 'type-graphql';
-import fastifyCors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
+import fastifyCors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
+import { buildSchema } from 'type-graphql';
 
-import UserResolver from '../modules/user/user.resolver';
-import logger from '../helpers/logger';
 import { User } from '../modules/user/user.dto';
-import RostResolver from '../modules/post/post.resolver';
+import CommentResolver from '../modules/comment/comment.resolver';
+import PostResolver from '../modules/post/post.resolver';
+import UserResolver from '../modules/user/user.resolver';
 
 const app = fastify();
 
@@ -80,7 +80,7 @@ export type Context = Awaited<ReturnType<typeof buildContext>>;
 
 async function createServer() {
   const schema = await buildSchema({
-    resolvers: [UserResolver, RostResolver],
+    resolvers: [UserResolver, PostResolver, CommentResolver],
   });
 
   const server = new ApolloServer({

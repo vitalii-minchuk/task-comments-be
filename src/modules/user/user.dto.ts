@@ -1,6 +1,7 @@
 import { IsEmail, Length } from 'class-validator';
 import { Field, ID, InputType, ObjectType } from 'type-graphql';
 import { Post } from '../post/post.dto';
+import { Comment } from '../comment/comment.dto';
 
 @ObjectType()
 export class User {
@@ -28,8 +29,8 @@ export class User {
   @Field(() => Post, { nullable: true })
   posts?: [Post];
 
-  // @Field({ nullable: true })
-  // comments?: string[];
+  @Field(() => Comment, { nullable: true })
+  comments?: [Comment];
 }
 
 @InputType()
