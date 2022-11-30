@@ -40,25 +40,23 @@ class UserResolver {
       if (!isValid) {
         throw new ApolloError('Invalid credentials');
       }
-
       const token = await context.reply.jwtSign({
         id: user.id,
-        email: user.email,
         username: user.username,
+        email: user.email,
       });
 
       if (!token) {
         throw new ApolloError('Error signing token');
       }
 
-      context.reply.setCookie('token', token, {
-        domain: 'localhost',
-        path: '/',
-        secure: false,
+      context.reply?.setCookie('token', token, {
+        // domain: 'netlify.app',
+        // path: '/',
+        // secure: true,
         httpOnly: true,
         sameSite: false,
       });
-
       return token;
     } catch (error: any) {
       throw Error(error);

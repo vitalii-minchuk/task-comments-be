@@ -22,5 +22,3 @@ export async function findUserByEmail(email: LoginUserInput['email']) {
 
   return user;
 }
-
-

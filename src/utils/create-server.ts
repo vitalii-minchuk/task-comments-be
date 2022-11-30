@@ -9,9 +9,12 @@ import fastify, {
 import { buildSchema } from 'type-graphql';
 import fastifyCors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
 
 import UserResolver from '../modules/user/user.resolver';
-import fastifyJwt from '@fastify/jwt';
+import logger from '../helpers/logger';
+import { User } from '../modules/user/user.dto';
+import RostResolver from '../modules/post/post.resolver';
 
 const app = fastify();
 
@@ -20,9 +23,11 @@ app.register(fastifyCors, {
   origin: (origin, cb) => {
     if (
       !origin ||
-      ['http://localhost:3000', 'https://studio.apollographql.com'].includes(
-        origin,
-      )
+      [
+        'http://127.0.0.1:5173',
+        'https://task-comments.netlify.app',
+        'https://studio.apollographql.com',
+      ].includes(origin)
     ) {
       return cb(null, true);
     }
@@ -54,13 +59,19 @@ function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
     },
   };
 }
+type CtxUser = Omit<User, 'password'>;
 
-async function buildContext(request: FastifyRequest, reply: FastifyReply) {
+async function buildContext({
+  request,
+  reply,
+}: {
+  request: FastifyRequest;
+  reply: FastifyReply;
+}) {
   try {
-    const user = await request.jwtVerify();
-
+    const user = await request.jwtVerify<CtxUser>();
     return { request, reply, user };
-  } catch (error) {
+  } catch (e) {
     return { request, reply, user: null };
   }
 }
@@ -69,7 +80,7 @@ export type Context = Awaited<ReturnType<typeof buildContext>>;
 
 async function createServer() {
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, RostResolver],
   });
 
   const server = new ApolloServer({

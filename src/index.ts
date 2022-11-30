@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import createServer from './utils/create-server';
+import logger from './helpers/logger';
 import { connectDB } from './utils/prisma';
 
 async function main() {
@@ -22,7 +23,7 @@ async function main() {
     host: '0.0.0.0',
   });
 
-  console.log(`Server ready at http://localhost:${4004}${server.graphqlPath}`);
+  logger.info(`Server ready at http://localhost:${4004}${server.graphqlPath}`);
 }
 
-main().catch((e) => console.log(e));
+main().catch((e) => logger.info(e));

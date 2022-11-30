@@ -1,5 +1,6 @@
 /* eslint-disable no-var */
 import { PrismaClient } from '@prisma/client';
+import logger from '../helpers/logger';
 
 let db: PrismaClient;
 
@@ -16,9 +17,9 @@ export const prisma = global.__db;
 export async function connectDB() {
   try {
     await prisma.$connect();
-    console.log('? Database connected successfully');
+    logger.info('? Database connected successfully');
   } catch (error) {
-    console.log(error);
+    logger.info(error);
     await prisma.$disconnect();
     process.exit(1);
   } finally {
