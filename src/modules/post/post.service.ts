@@ -6,7 +6,6 @@ export async function createPost(input: CreatePostInput, authorId: User['id']) {
   const post = await prisma.post.create({
     data: {
       text: input.text,
-      link: input.link,
       user: {
         connect: {
           id: authorId,
@@ -30,6 +29,7 @@ export async function findAllPosts() {
         },
       },
     },
+    orderBy: { createdAt: 'desc' },
   });
 
   return posts;

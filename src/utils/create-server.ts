@@ -70,6 +70,7 @@ async function buildContext({
 }) {
   try {
     const user = await request.jwtVerify<CtxUser>();
+
     return { request, reply, user };
   } catch (e) {
     return { request, reply, user: null };

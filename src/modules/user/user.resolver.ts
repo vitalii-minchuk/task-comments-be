@@ -1,5 +1,6 @@
 import { ApolloError } from 'apollo-server-core';
 import { Arg, Ctx, Mutation, Query } from 'type-graphql';
+import logger from '../../helpers/logger';
 
 import verifyPassword from '../../helpers/verify-password';
 import { Context } from '../../utils/create-server';
@@ -14,6 +15,7 @@ class UserResolver {
 
   @Mutation(() => User)
   async registerUser(@Arg('input') input: RegisterUserInput) {
+    logger.info(input);
     try {
       const user = await createUser(input);
 
@@ -51,12 +53,16 @@ class UserResolver {
       }
 
       context.reply?.setCookie('token', token, {
+        domain: 'localhost',
+        path: '/',
+        secure: true,
         // domain: 'netlify.app',
         // path: '/',
         // secure: true,
         httpOnly: true,
-        sameSite: false,
+        sameSite: 'none',
       });
+
       return token;
     } catch (error: any) {
       throw Error(error);

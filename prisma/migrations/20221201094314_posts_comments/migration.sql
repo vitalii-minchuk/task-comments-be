@@ -2,7 +2,6 @@
 CREATE TABLE "posts" (
     "id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "link" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -24,7 +23,7 @@ CREATE TABLE "comments" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "posts_link_key" ON "posts"("link");
+CREATE UNIQUE INDEX "posts_id_key" ON "posts"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "comments_id_key" ON "comments"("id");

@@ -11,7 +11,7 @@ class RostResolver {
   async getAllPosts() {
     try {
       const posts = await findAllPosts();
-      logger.info(posts);
+
       return posts;
     } catch (error: any) {
       throw Error(error);
@@ -24,8 +24,6 @@ class RostResolver {
     @Ctx() context: Context,
   ) {
     try {
-      logger.info(context.user);
-      logger.info(input);
       if (!context.user) {
         throw new ApolloError('Author does not exist');
       }

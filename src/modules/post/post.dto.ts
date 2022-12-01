@@ -30,7 +30,4 @@ export class CreatePostInput {
   @Field()
   @Length(20, 255)
   text: string;
-
-  @Field()
-  link: string;
 }

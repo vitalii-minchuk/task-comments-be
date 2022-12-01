@@ -1,4 +1,5 @@
 import { prisma } from '../../utils/prisma';
+import { Post } from '../post/post.dto';
 import { User } from '../user/user.dto';
 import { CreateCommentInput } from './comment.dto';
 
@@ -9,8 +10,24 @@ export async function createComment(
   const comment = await prisma.comment.create({
     data: {
       text: input.text,
-      postId: 'clb3lnki60008xqbu7z1jsl8y',
-      userId: authorId,
+      post: { connect: { id: input.postId } },
+      user: {
+        connect: {
+          id: authorId,
+        },
+      },
     },
   });
+
+  return comment;
+}
+
+export async function findAllPostComments(postId: Post['id']) {
+  const comments = await prisma.comment.findMany({
+    where: {
+      postId,
+    },
+  });
+
+  return comments;
 }

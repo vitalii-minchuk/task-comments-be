@@ -1,19 +1,33 @@
 import { ApolloError } from 'apollo-server-core';
-import { Arg, Ctx, Mutation } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query } from 'type-graphql';
+
 import logger from '../../helpers/logger';
 import { Context } from '../../utils/create-server';
-import { Comment, CreateCommentInput } from './comment.dto';
-import { createComment } from './comment.service';
+import {
+  Comment,
+  CreateCommentInput,
+  GetPostCommentsInput,
+} from './comment.dto';
+import { createComment, findAllPostComments } from './comment.service';
 
 class CommentResolver {
+  @Query(() => [Comment])
+  async getAllPostComments(@Arg('input') input: GetPostCommentsInput) {
+    try {
+      const comments = await findAllPostComments(input.postId);
+
+      return comments;
+    } catch (error: any) {
+      throw Error(error);
+    }
+  }
+
   @Mutation(() => Comment)
   async createNewComment(
     @Arg('input') input: CreateCommentInput,
     @Ctx() context: Context,
   ) {
     try {
-      logger.info(context.user);
-      logger.info(input);
       if (!context.user) {
         throw new ApolloError('Author does not exist');
       }
