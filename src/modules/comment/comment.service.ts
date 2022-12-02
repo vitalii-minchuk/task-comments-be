@@ -16,6 +16,13 @@ export async function createComment(
           id: authorId,
         },
       },
+      ...(input.parentId && {
+        parent: {
+          connect: {
+            id: input.parentId,
+          },
+        },
+      }),
     },
   });
 
@@ -26,6 +33,9 @@ export async function findAllPostComments(postId: Post['id']) {
   const comments = await prisma.comment.findMany({
     where: {
       postId,
+    },
+    include: {
+      user: true,
     },
   });
 

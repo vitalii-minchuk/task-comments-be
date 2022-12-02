@@ -15,7 +15,7 @@ class CommentResolver {
   async getAllPostComments(@Arg('input') input: GetPostCommentsInput) {
     try {
       const comments = await findAllPostComments(input.postId);
-
+      logger.info(comments);
       return comments;
     } catch (error: any) {
       throw Error(error);

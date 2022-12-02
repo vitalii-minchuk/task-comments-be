@@ -1,6 +1,7 @@
 import { Length } from 'class-validator';
 import { Field, ID, InputType, ObjectType } from 'type-graphql';
 import { Post } from '../post/post.dto';
+import { User } from '../user/user.dto';
 
 @ObjectType()
 export class Comment {
@@ -10,17 +11,23 @@ export class Comment {
   @Field()
   text: string;
 
-  @Field()
-  authorId: string;
+  @Field(() => User)
+  user: [User];
 
   @Field()
   postId: string;
 
-  @Field(() => Comment, { nullable: true })
-  children?: [Comment];
+  @Field(() => [Comment])
+  children: [Comment];
 
-  @Field(() => Comment, { nullable: true })
-  parent?: Comment;
+  @Field({ nullable: true })
+  parentId?: string;
+
+  @Field({ nullable: true })
+  createdAt?: Date;
+
+  @Field({ nullable: true })
+  updatedAt?: Date;
 }
 
 @InputType()
@@ -31,6 +38,9 @@ export class CreateCommentInput {
 
   @Field()
   postId: string;
+
+  @Field({ nullable: true })
+  parentId?: string;
 }
 
 @InputType()
