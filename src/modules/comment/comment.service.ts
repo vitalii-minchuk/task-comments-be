@@ -10,6 +10,7 @@ export async function createComment(
   const comment = await prisma.comment.create({
     data: {
       text: input.text,
+      image_url: input.image_url ? input.image_url : '',
       post: { connect: { id: input.postId } },
       user: {
         connect: {

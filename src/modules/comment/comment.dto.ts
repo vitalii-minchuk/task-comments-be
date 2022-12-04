@@ -1,6 +1,5 @@
 import { Length } from 'class-validator';
 import { Field, ID, InputType, ObjectType } from 'type-graphql';
-import { Post } from '../post/post.dto';
 import { User } from '../user/user.dto';
 
 @ObjectType()
@@ -10,6 +9,9 @@ export class Comment {
 
   @Field()
   text: string;
+
+  @Field()
+  image_url: string;
 
   @Field(() => User)
   user: [User];
@@ -35,6 +37,9 @@ export class CreateCommentInput {
   @Field()
   @Length(20, 255)
   text: string;
+
+  @Field({ nullable: true })
+  image_url?: string;
 
   @Field()
   postId: string;

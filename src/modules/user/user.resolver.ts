@@ -1,7 +1,8 @@
 import { ApolloError } from 'apollo-server-core';
 import { Arg, Ctx, Mutation, Query } from 'type-graphql';
-import logger from '../../helpers/logger';
+import sanitizeHtml from 'sanitize-html';
 
+import logger from '../../helpers/logger';
 import verifyPassword from '../../helpers/verify-password';
 import { Context } from '../../utils/create-server';
 import { LoginUserInput, RegisterUserInput, User } from './user.dto';
@@ -15,8 +16,21 @@ class UserResolver {
 
   @Mutation(() => User)
   async registerUser(@Arg('input') input: RegisterUserInput) {
-    logger.info(input);
     try {
+      for (const value of Object.values(input)) {
+        const cleanData = sanitizeHtml(value);
+
+        if (!cleanData) {
+          throw new ApolloError('hello');
+        }
+      }
+
+      const candidate = await findUserByEmail(input.email);
+
+      if (candidate) {
+        throw new ApolloError('Email is already taken');
+      }
+
       const user = await createUser(input);
 
       return user;
@@ -28,6 +42,14 @@ class UserResolver {
   @Mutation(() => String)
   async login(@Arg('input') input: LoginUserInput, @Ctx() context: Context) {
     try {
+      for (const value of Object.values(input)) {
+        const cleanData = sanitizeHtml(value);
+
+        if (!cleanData) {
+          throw new ApolloError('hello');
+        }
+      }
+
       const user = await findUserByEmail(input.email);
 
       if (!user) {

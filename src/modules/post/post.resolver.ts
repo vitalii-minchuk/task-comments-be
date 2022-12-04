@@ -1,18 +1,44 @@
 import { ApolloError } from 'apollo-server-core';
+import sanitizeHtml from 'sanitize-html';
 import { Arg, Ctx, Mutation, Query } from 'type-graphql';
-import logger from '../../helpers/logger';
+
+import { sanitizeHtmlOptions } from '../../constants';
 import { Context } from '../../utils/create-server';
-import { User } from '../user/user.dto';
-import { CreatePostInput, Post } from './post.dto';
-import { createPost, findAllPosts } from './post.service';
+import {
+  CreatePostInput,
+  GetPostsInput,
+  OrderTypeType,
+  Post,
+  SortOptions,
+} from './post.dto';
+import { createPost, findAllPosts, getTotalPosts } from './post.service';
 
 class RostResolver {
   @Query(() => [Post])
-  async getAllPosts() {
+  async getAllPosts(
+    @Arg('posts')
+    {
+      orderBy = 'createdAt',
+      orderType = OrderTypeType.DESC,
+      take = 25,
+      skip = 0,
+    }: GetPostsInput,
+  ) {
+    const sortOptions: SortOptions = {
+      [orderBy]: orderType,
+    };
+
     try {
-      const posts = await findAllPosts();
+      const total = await getTotalPosts();
+      const postsWithoutTotal = await findAllPosts({
+        take,
+        skip,
+        sortOptions,
+      });
+      const posts = postsWithoutTotal.map((post) => ({ ...post, total }));
 
       return posts;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }
@@ -24,13 +50,21 @@ class RostResolver {
     @Ctx() context: Context,
   ) {
     try {
+      const cleanData = sanitizeHtml(input.text, sanitizeHtmlOptions);
+
+      if (!cleanData) {
+        throw new ApolloError('hello');
+      }
+
       if (!context.user) {
         throw new ApolloError('Author does not exist');
       }
+
       const authorId = context.user.id;
       const post = await createPost(input, authorId);
 
       return post;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }

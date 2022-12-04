@@ -39,6 +39,7 @@ model Post {
 model Comment {
   id        String    @id @unique @default(cuid())
   text      String
+  image_url String
   user      User      @relation(fields: [userId], references: [id])
   userId    String
   parent    Comment?  @relation("comment_children", fields: [parentId], references: [id])

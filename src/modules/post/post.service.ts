@@ -1,6 +1,7 @@
+import logger from '../../helpers/logger';
 import { prisma } from '../../utils/prisma';
-import { CreatePostInput } from './post.dto';
 import { User } from '../user/user.dto';
+import { CreatePostInput, SortOptions } from './post.dto';
 
 export async function createPost(input: CreatePostInput, authorId: User['id']) {
   const post = await prisma.post.create({
@@ -17,7 +18,24 @@ export async function createPost(input: CreatePostInput, authorId: User['id']) {
   return post;
 }
 
-export async function findAllPosts() {
+export async function findAllPosts({
+  skip = 0,
+  take,
+  sortOptions,
+}: {
+  skip?: number;
+  take?: number;
+  sortOptions: SortOptions;
+}) {
+  const modifySortOptions = (sortOptions: SortOptions) => {
+    logger.info(sortOptions.createdAt);
+    if (sortOptions.createdAt) {
+      return sortOptions;
+    }
+    return { user: sortOptions };
+  };
+
+  logger.info(modifySortOptions(sortOptions));
   const posts = await prisma.post.findMany({
     select: {
       id: true,
@@ -25,12 +43,20 @@ export async function findAllPosts() {
       text: true,
       user: {
         select: {
+          email: true,
           username: true,
         },
       },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: modifySortOptions(sortOptions),
+    take,
+    skip,
   });
 
   return posts;
+}
+
+export async function getTotalPosts() {
+  const allPosts = await prisma.post.findMany();
+  return allPosts.length;
 }

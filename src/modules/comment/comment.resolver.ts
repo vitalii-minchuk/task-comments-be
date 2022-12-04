@@ -1,7 +1,8 @@
 import { ApolloError } from 'apollo-server-core';
+import sanitizeHtml from 'sanitize-html';
 import { Arg, Ctx, Mutation, Query } from 'type-graphql';
+import { sanitizeHtmlOptions } from '../../constants';
 
-import logger from '../../helpers/logger';
 import { Context } from '../../utils/create-server';
 import {
   Comment,
@@ -15,8 +16,9 @@ class CommentResolver {
   async getAllPostComments(@Arg('input') input: GetPostCommentsInput) {
     try {
       const comments = await findAllPostComments(input.postId);
-      logger.info(comments);
+
       return comments;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }
@@ -28,6 +30,12 @@ class CommentResolver {
     @Ctx() context: Context,
   ) {
     try {
+      const cleanData = sanitizeHtml(input.text, sanitizeHtmlOptions);
+
+      if (!cleanData) {
+        throw new ApolloError('hello');
+      }
+
       if (!context.user) {
         throw new ApolloError('Author does not exist');
       }
@@ -35,6 +43,7 @@ class CommentResolver {
       const comment = await createComment(input, authorId);
 
       return comment;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }
