@@ -75,12 +75,10 @@ class UserResolver {
       }
 
       context.reply?.setCookie('token', token, {
-        domain: 'localhost',
+        // domain: 'localhost',
         path: '/',
         secure: true,
-        // domain: 'netlify.app',
-        // path: '/',
-        // secure: true,
+        domain: 'netlify.app',
         httpOnly: true,
         sameSite: 'none',
       });

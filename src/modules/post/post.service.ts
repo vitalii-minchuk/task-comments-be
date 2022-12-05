@@ -7,6 +7,7 @@ export async function createPost(input: CreatePostInput, authorId: User['id']) {
   const post = await prisma.post.create({
     data: {
       text: input.text,
+      image_url: input.image_url ? input.image_url : '',
       user: {
         connect: {
           id: authorId,
@@ -19,7 +20,7 @@ export async function createPost(input: CreatePostInput, authorId: User['id']) {
 }
 
 export async function findAllPosts({
-  skip = 0,
+  skip,
   take,
   sortOptions,
 }: {
@@ -28,23 +29,23 @@ export async function findAllPosts({
   sortOptions: SortOptions;
 }) {
   const modifySortOptions = (sortOptions: SortOptions) => {
-    logger.info(sortOptions.createdAt);
     if (sortOptions.createdAt) {
       return sortOptions;
     }
     return { user: sortOptions };
   };
 
-  logger.info(modifySortOptions(sortOptions));
   const posts = await prisma.post.findMany({
     select: {
       id: true,
       createdAt: true,
       text: true,
+      image_url: true,
       user: {
         select: {
           email: true,
           username: true,
+          avatar: true,
         },
       },
     },

@@ -1,4 +1,4 @@
-import { IsEmail, Length } from 'class-validator';
+import { IsEmail, isURL, Length } from 'class-validator';
 import { Field, ID, InputType, ObjectType } from 'type-graphql';
 import { Post } from '../post/post.dto';
 import { Comment } from '../comment/comment.dto';
@@ -13,6 +13,9 @@ export class User {
 
   @Field()
   email: string;
+
+  @Field({ nullable: true })
+  avatar?: string;
 
   @Field()
   password: string;
@@ -46,6 +49,9 @@ export class RegisterUserInput {
   @Field()
   @Length(6, 44)
   password: string;
+
+  @Field({ nullable: true })
+  homePageUrl?: string;
 }
 
 @InputType()

@@ -7,12 +7,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgres://postgres@localhost:5432/comments"
+  url      = "postgres://postgres@postgres:5432/comments"
 }
 
 model User {
   id          String    @id @default(cuid())
   username    String
+  avatar      String?
   email       String    @unique
   password    String
   homePageUrl String?
@@ -27,7 +28,8 @@ model User {
 model Post {
   id        String    @id @unique @default(cuid())
   text      String
-  user      User      @relation(fields: [userId], references: [id])
+  image_url String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   Comment   Comment[]
   createdAt DateTime  @default(now())

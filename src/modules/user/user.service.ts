@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import argon2 from 'argon2';
 
 import { prisma } from '../../utils/prisma';
@@ -8,8 +9,10 @@ export async function createUser(input: RegisterUserInput) {
 
   const user = await prisma.user.create({
     data: {
+      avatar: faker.image.avatar(),
       email: input.email,
       username: input.username,
+      homePageUrl: input.homePageUrl,
       password,
     },
   });

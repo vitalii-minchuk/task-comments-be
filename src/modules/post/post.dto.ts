@@ -13,6 +13,9 @@ export class Post {
   text: string;
 
   @Field({ nullable: true })
+  image_url?: string;
+
+  @Field({ nullable: true })
   createdAt?: Date;
 
   @Field({ nullable: true })
@@ -33,6 +36,9 @@ export class CreatePostInput {
   @Field()
   @Length(20, 640)
   text: string;
+
+  @Field({ nullable: true })
+  image_url?: string;
 }
 
 export enum OrderTypeType {

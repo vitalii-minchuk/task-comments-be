@@ -15,6 +15,7 @@ import { User } from '../modules/user/user.dto';
 import CommentResolver from '../modules/comment/comment.resolver';
 import PostResolver from '../modules/post/post.resolver';
 import UserResolver from '../modules/user/user.resolver';
+import FakeDataResolver from '../modules/fake-data/fake-data.resolver';
 
 const app = fastify();
 
@@ -81,7 +82,7 @@ export type Context = Awaited<ReturnType<typeof buildContext>>;
 
 async function createServer() {
   const schema = await buildSchema({
-    resolvers: [UserResolver, PostResolver, CommentResolver],
+    resolvers: [UserResolver, PostResolver, CommentResolver, FakeDataResolver],
   });
 
   const server = new ApolloServer({

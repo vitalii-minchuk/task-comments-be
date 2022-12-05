@@ -1,23 +1,27 @@
 version: "2"
 
 services:
-  # backend:
-  #   build: .
-  #   ports:
-  #     - 4004:4004
-  #     - 9229:9229
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   environment:
-  #     DATABASE_URL: postgres://postgres@postgres/comments_dev
-  #     PORT: 4004
-  #   command: npm run start:docker
-  #   restart: always
-  #   depends_on:
-  #     - postgres
+  backend:
+    build: .
+    ports:
+      - 4004:4004
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: postgres://postgres@postgres/comments
+      PORT: 4004
+      REDIS_HOST: redis
+    command: npm run start:docker
+    restart: always
+    depends_on:
+      - postgres
 
-  db:
+  redis:
+    image: redis:6.2.5-alpine
+
+  postgres:
     image: postgres:14-alpine
     ports:
       - 5432:5432

@@ -1,21 +1,21 @@
-# FROM node:18
+FROM node:18
 
-# WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
-# COPY prisma ./prisma
+COPY prisma ./prisma
 
-# COPY package.json package-lock.json ./
+COPY package.json package-lock.json ./
 
-# RUN npm install
+RUN npm install
 
-# COPY prisma/schema.prisma ./prisma/
+COPY prisma/schema.prisma ./prisma/
 
-# RUN npx prisma generate
+RUN npx prisma generate
 
-# COPY . .
+COPY . .
 
-# RUN npm run build
+RUN npm run build
 
-# EXPOSE 4004
+EXPOSE 4004
 
-# CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start"]
