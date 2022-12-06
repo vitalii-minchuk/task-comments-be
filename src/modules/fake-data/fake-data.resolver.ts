@@ -1,21 +1,23 @@
-import { Mutation } from 'type-graphql';
+import { Authorized, Mutation } from 'type-graphql';
 import _times from 'lodash.times';
 
 import { enqueue } from './../../utils/queue';
 import { removeData } from './fake-data.service';
 
 class FakeDataResolver {
+  
+  @Authorized()
   @Mutation(() => Boolean)
   async generateFakeData() {
     try {
       await Promise.all(
-        _times(2).map(async () => {
+        _times(10).map(async () => {
           await enqueue('generateFakeUser');
         }),
       );
 
       await Promise.all(
-        _times(10).map(async () => {
+        _times(30).map(async () => {
           await enqueue('generateFakePost');
         }),
       );
@@ -34,6 +36,7 @@ class FakeDataResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteData() {
     try {

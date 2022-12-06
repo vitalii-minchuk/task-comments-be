@@ -19,8 +19,8 @@ model User {
   homePageUrl String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  post        Post[]
   comment     Comment[]
+  Post        Post[]
 
   @@map("users")
 }
@@ -42,11 +42,11 @@ model Comment {
   id        String    @id @unique @default(cuid())
   text      String
   image_url String
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  parent    Comment?  @relation("comment_children", fields: [parentId], references: [id])
+  parent    Comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: Cascade)
   parentId  String?
-  post      Post      @relation(fields: [postId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   children  Comment[] @relation("comment_children")
   createdAt DateTime  @default(now())

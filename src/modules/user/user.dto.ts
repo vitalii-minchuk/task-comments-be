@@ -1,7 +1,8 @@
-import { IsEmail, isURL, Length } from 'class-validator';
+import { IsEmail, Length } from 'class-validator';
 import { Field, ID, InputType, ObjectType } from 'type-graphql';
-import { Post } from '../post/post.dto';
+
 import { Comment } from '../comment/comment.dto';
+import { Post } from '../post/post.dto';
 
 @ObjectType()
 export class User {

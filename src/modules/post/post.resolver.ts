@@ -1,9 +1,8 @@
 import { ApolloError } from 'apollo-server-core';
 import sanitizeHtml from 'sanitize-html';
-import { Arg, Ctx, Mutation, Query } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query } from 'type-graphql';
 
 import { sanitizeHtmlOptions } from '../../constants';
-import logger from '../../helpers/logger';
 import { Context } from '../../utils/create-server';
 import {
   CreatePostInput,
@@ -45,6 +44,7 @@ class RostResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Post)
   async createNewPost(
     @Arg('input') input: CreatePostInput,

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import createServer from './utils/create-server';
 import logger from './helpers/logger';
 import { connectDB } from './utils/prisma';

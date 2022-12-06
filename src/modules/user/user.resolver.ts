@@ -2,7 +2,6 @@ import { ApolloError } from 'apollo-server-core';
 import { Arg, Ctx, Mutation, Query } from 'type-graphql';
 import sanitizeHtml from 'sanitize-html';
 
-import logger from '../../helpers/logger';
 import verifyPassword from '../../helpers/verify-password';
 import { Context } from '../../utils/create-server';
 import { LoginUserInput, RegisterUserInput, User } from './user.dto';
@@ -34,6 +33,8 @@ class UserResolver {
       const user = await createUser(input);
 
       return user;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }
@@ -75,15 +76,17 @@ class UserResolver {
       }
 
       context.reply?.setCookie('token', token, {
-        // domain: 'localhost',
+        domain: 'localhost',
         path: '/',
         secure: true,
-        domain: 'netlify.app',
+        // domain: 'netlify.app',
         httpOnly: true,
         sameSite: 'none',
       });
 
       return token;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       throw Error(error);
     }

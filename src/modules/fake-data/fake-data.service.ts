@@ -62,7 +62,7 @@ export async function createFakeComments() {
 }
 
 export async function removeData() {
-  const result = await prisma.user.deleteMany();
+  const result = await prisma.user.deleteMany({});
 
   return result;
 }

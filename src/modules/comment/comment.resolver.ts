@@ -1,8 +1,8 @@
 import { ApolloError } from 'apollo-server-core';
 import sanitizeHtml from 'sanitize-html';
-import { Arg, Ctx, Mutation, Query } from 'type-graphql';
-import { sanitizeHtmlOptions } from '../../constants';
+import { Arg, Authorized, Ctx, Mutation, Query } from 'type-graphql';
 
+import { sanitizeHtmlOptions } from '../../constants';
 import { Context } from '../../utils/create-server';
 import {
   Comment,
@@ -24,6 +24,7 @@ class CommentResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Comment)
   async createNewComment(
     @Arg('input') input: CreateCommentInput,
