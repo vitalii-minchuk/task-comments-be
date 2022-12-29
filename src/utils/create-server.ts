@@ -27,6 +27,8 @@ app.register(fastifyCors, {
       !origin ||
       [
         'http://127.0.0.1:5173',
+        'http://localhost:5173',
+        'https://commts-vue.netlify.app/',
         'https://task-comments.netlify.app',
         'https://studio.apollographql.com',
       ].includes(origin)
